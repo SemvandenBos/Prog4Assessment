@@ -65,6 +65,7 @@ public class World {
 	}
 
 	public void addTreeBatch(List<Tree> trees) {
+		this.trees.clear();
 		this.trees.setAll(trees);
 	}
 

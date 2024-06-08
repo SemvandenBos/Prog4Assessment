@@ -54,7 +54,7 @@ public class FileIO {
 
 	public void savePainting(List<Tree> trees) {
 		File selectedFile = fc.showSaveDialog(null);
-		if (!selectedFile.exists()) {
+		if (selectedFile != null && !selectedFile.exists()) {
 			try {
 				selectedFile.createNewFile();
 			} catch (IOException e) {

@@ -65,7 +65,12 @@ public class Tree {
 	}
 
 	public void setRelPoint(double xRel, double yRel) {
-		relXproperty.set(xRel * 100);
-		relYproperty.set(yRel * 50.0);
+		relXproperty.set(xRel);
+		if (yRel < 50.0) {
+			yRel = 50.0;
+		} else if (yRel > 100.0) {
+			yRel = 100.0;
+		}
+		relYproperty.set(yRel);
 	}
 }

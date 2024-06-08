@@ -34,11 +34,13 @@ public class PaintingScene extends Scene {
 		createPanes(world);
 	}
 
+	//TODO redundant? messy?
 	private void createPanes(World world) {
 		BorderPane root = (BorderPane) getRoot();
 		root.setPrefSize(800, 600);
 
 		AnchorPane skyPane = new AnchorPane();
+		skyPane.prefWidthProperty().bind(root.widthProperty());
 		skyPane.setBackground(new Background(new BackgroundFill(Color.SKYBLUE, null, null)));
 
 		autographLabel = new Label("Sem van den Bos");
@@ -46,7 +48,7 @@ public class PaintingScene extends Scene {
 		AnchorPane.setBottomAnchor(autographLabel, AUTHOGRAPH_SPACING);
 		AnchorPane.setRightAnchor(autographLabel, AUTHOGRAPH_SPACING);
 
-		paintingPane = new PaintingPane(world, skyPane);
+		paintingPane = new PaintingPane(world);
 		paintingPane.prefHeightProperty().bind(skyPane.heightProperty().divide(2));
 		paintingPane.prefWidthProperty().bind(root.widthProperty());
 		AnchorPane.setBottomAnchor(paintingPane, 0.0);

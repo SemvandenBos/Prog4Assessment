@@ -12,7 +12,7 @@ public class PaintingPane extends Pane {
 	private LeafTreePainter leafTreePainter;
 	private PineTreePainter pineTreePainter;
 
-	public PaintingPane(World world, Pane skyPane) {
+	public PaintingPane(World world) {
 		world.treesProperty().addListener((observable, oldValue, newValue) -> {
 			if (newValue.isEmpty()) {
 				this.getChildren().clear();
@@ -43,9 +43,7 @@ public class PaintingPane extends Pane {
 	private void addSingleTreePane(Tree tree) {
 		switch (tree.getTreeType()) {
 		case LEAF:
-			Pane p = leafTreePainter.drawTree(tree, widthProperty(), heightProperty());
-
-			getChildren().add(p);
+			getChildren().add(leafTreePainter.drawTree(tree, widthProperty(), heightProperty()));
 			break;
 		case PINE:
 			getChildren().add(pineTreePainter.drawTree(tree, widthProperty(), heightProperty()));
