@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import enums.MovableObjectSize;
-import enums.MovableObjectType;
 import enums.TreeType;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -20,6 +19,7 @@ import model.Tree;
 
 public class FileIO {
 	private static final int EXPECTED_NR_OF_ARGS = 4;
+	private static final String SPLIT_CHARACTER = ":";
 	private FileChooser fc;
 	private Stage stage;
 
@@ -29,8 +29,7 @@ public class FileIO {
 		File f = new File("./Resources/paintings");
 		fc.setInitialDirectory(f);
 		fc.setTitle("Open .painting file to load");
-		fc.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.painting"),
-				new ExtensionFilter("Text Files", "*.superpainting")); // TODO
+		fc.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.painting"));
 	}
 
 	public List<Tree> loadPainting() {
@@ -45,7 +44,6 @@ public class FileIO {
 			while ((line = br.readLine()) != null) {
 				lineNr++;
 				handleLine(line, trees, lineNr);
-
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -56,7 +54,7 @@ public class FileIO {
 
 	// TODO implement proper error handling (user feedback?)
 	private void handleLine(String line, List<Tree> trees, int lineNr) {
-		String[] sem = line.split(":");
+		String[] sem = line.split(SPLIT_CHARACTER);
 		if (sem.length == 0) {
 			System.out.println("Empty line at " + lineNr);
 			return;
@@ -74,7 +72,7 @@ public class FileIO {
 				System.out.println("Coordinates out of bounds at line " + lineNr);
 				return;
 			}
-			trees.add(new Tree(MovableObjectType.TREE, type, size, relX, relY));
+			trees.add(new Tree(type, size, relX, relY));
 		} catch (NumberFormatException nfe) {
 			System.out.println("Wrong number on line " + lineNr);
 		} catch (IllegalArgumentException iae) {

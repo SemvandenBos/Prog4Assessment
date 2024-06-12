@@ -22,16 +22,16 @@ public enum MovableObjectSize {
 		this.colorBrightness = colorBrightness;
 	}
 
+	public static MovableObjectSize randomSize() {
+		return VALUES.get(RANDOM.nextInt(SIZE));
+	}
+
 	public double getColorSaturation() {
 		return colorSaturation;
 	}
 
 	public double getColorBrightness() {
 		return colorBrightness;
-	}
-
-	public static MovableObjectSize randomSize() {
-		return VALUES.get(RANDOM.nextInt(SIZE));
 	}
 
 	public double getSizeScaleValue() {

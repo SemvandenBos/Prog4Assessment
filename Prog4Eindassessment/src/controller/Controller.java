@@ -41,7 +41,7 @@ public class Controller extends Application {
 
 //	-----------MVC Methods passings-------------
 	public void addTree(TreeType type) {
-		world.addTree(type);
+		world.addTreeOfType(type);
 	}
 
 	public void clearAllTrees() {
@@ -49,7 +49,7 @@ public class Controller extends Application {
 	}
 
 	public void addTreeBatch(int amountOfTrees) {
-		world.addTrees(amountOfTrees);
+		world.addRandomTrees(amountOfTrees);
 	}
 
 	public void toggleMovie() {
@@ -61,19 +61,19 @@ public class Controller extends Application {
 	}
 
 	public void savePainting() {
-		fileIO.savePainting(world.getTrees());
+		fileIO.savePainting(world.treesProperty().get());
 	}
 
 	public void keyPressed(KeyCode keyCode) {
 		world.keyPressed(keyCode);
 	}
 
-	public void setRelPoint(double xRel, double yRel, MovableObject movableObject) {
-		movableObject.setRelPoint(xRel, yRel);
-	}
-
 	public void addOrb() {
 		world.addOrb();
+	}
+
+	public void setRelPoint(double xRel, double yRel, MovableObject movableObject) {
+		world.setRelPoint(xRel, yRel, movableObject);
 	}
 
 	public void adjustDepth(MovableObject movableObject) {

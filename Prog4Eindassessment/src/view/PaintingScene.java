@@ -3,7 +3,6 @@ package view;
 import controller.Controller;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
@@ -14,7 +13,7 @@ public class PaintingScene extends Scene {
 	private static final double PAINTING_WIDTH = 800;
 	private static final double PAINTING_HEIGHT = 600;
 	private Controller mainController;
-	private MenuBar menuBar;
+	private PaintingMenuBar menuBar;
 	private Label autographLabel;
 
 	private Pane centerPane;
@@ -30,10 +29,10 @@ public class PaintingScene extends Scene {
 	private void createChildren(Controller controller, World world) {
 		centerPane = new Pane();
 		this.autographLabel = new AutographLabel(centerPane);
-		menuBar = new TreeMenuBar(controller, this);
+		menuBar = new PaintingMenuBar(controller, this);
 
 		PaintingPane paintingPane = new PaintingPane(world, controller, centerPane);
-		DuckPane duckPane = new DuckPane(world.getDuck(), centerPane);
+		DuckPane duckPane = new DuckPane(world, centerPane);
 		centerPane.getChildren().addAll(paintingPane, autographLabel, duckPane);
 	}
 

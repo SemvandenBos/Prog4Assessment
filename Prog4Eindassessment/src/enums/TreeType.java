@@ -9,10 +9,6 @@ public enum TreeType {
 
 	PINE, LEAF;
 
-	public static TreeType valueOf() {
-		return null;
-	}
-
 	private static final List<TreeType> VALUES = Collections.unmodifiableList(Arrays.asList(values()));
 	private static final int SIZE = VALUES.size();
 	private static final Random RANDOM = new Random();

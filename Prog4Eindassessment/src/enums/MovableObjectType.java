@@ -1,5 +1,5 @@
 package enums;
 
 public enum MovableObjectType {
-	TREE, BUSH, HOUSE;
+	TREE, BUSH, HOUSE, DUCK;
 }

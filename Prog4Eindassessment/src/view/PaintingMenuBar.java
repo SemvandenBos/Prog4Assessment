@@ -3,6 +3,7 @@ package view;
 import controller.Controller;
 import enums.TreeType;
 import javafx.application.Platform;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -10,13 +11,13 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.text.Font;
 
-public class TreeMenuBar extends MenuBar {
+public class PaintingMenuBar extends MenuBar {
 	private static final double FONT_SIZE = 24.0;
 
 	private Controller mainController;
 	private PaintingScene paintingScene;
 
-	public TreeMenuBar(Controller mainController, PaintingScene scene) {
+	public PaintingMenuBar(Controller mainController, PaintingScene scene) {
 		this.mainController = mainController;
 		this.paintingScene = scene;
 		createMenuBar();
@@ -91,7 +92,7 @@ public class TreeMenuBar extends MenuBar {
 	}
 
 	private Menu createMovieMenu() {
-		MenuItem playItem = new MenuItem("play");
+		CheckMenuItem playItem = new CheckMenuItem("play");
 		playItem.setOnAction(e -> mainController.toggleMovie());
 
 		Menu movieMenu = new Menu("Movie");

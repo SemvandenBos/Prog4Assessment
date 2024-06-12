@@ -1,6 +1,7 @@
 package view;
 
 import controller.Controller;
+import enums.Biome;
 import javafx.collections.ListChangeListener;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -13,7 +14,7 @@ import model.World;
 public class PaintingPane extends Pane {
 	private LeafTreePainter leafTreePainter;
 	private PineTreePainter pineTreePainter;
-	private CustomObjectPainter customObjectPainter;
+	private CustomObjectPainter houseObjectPainter;
 
 	private Controller controller;
 	private Pane skyPane;
@@ -21,15 +22,14 @@ public class PaintingPane extends Pane {
 	public PaintingPane(World world, Controller controller, Pane wrapper) {
 		this.controller = controller;
 		skyPane = new Pane();
-		skyPane.setBackground(new Background(new BackgroundFill(Color.SKYBLUE, null, null)));
-		getChildren().add(skyPane);
 
 		leafTreePainter = new LeafTreePainter();
 		pineTreePainter = new PineTreePainter();
-		customObjectPainter = new CustomObjectPainter();
+		houseObjectPainter = new CustomObjectPainter();
 
-		this.setBackground(new Background(new BackgroundFill(Color.SANDYBROWN, null, null)));
+		getChildren().add(skyPane);
 
+		setBiomeLayout(world.getCurrentBiome());
 		setBindings(wrapper);
 		setListeners(world);
 	}
@@ -53,17 +53,27 @@ public class PaintingPane extends Pane {
 				int index = change.getFrom();
 				if (change.wasAdded()) {
 					for (MovableObject tree : change.getAddedSubList()) {
-
 						addSingleMovableObject(tree, index);
 					}
 					return;
 				}
 				if (getChildren().size() > 1) {
 					getChildren().remove(index + 1);
-
 				}
 			}
 		});
+
+		world.selectedBiomeProperty().addListener((ov, o, n) -> {
+			Biome biome = world.getCurrentBiome();
+			setBiomeLayout(biome);
+		});
+	}
+
+	private void setBiomeLayout(Biome biome) {
+		Color skyColor = Color.valueOf(biome.getSkyColor());
+		Color groundColor = Color.valueOf(biome.getGroundColor());
+		skyPane.setBackground(new Background(new BackgroundFill(skyColor, null, null)));
+		this.setBackground(new Background(new BackgroundFill(groundColor, null, null)));
 	}
 
 	// TODO hoe en wat? niet chill
@@ -77,7 +87,7 @@ public class PaintingPane extends Pane {
 			p = pineTreePainter.paintMovableObject(tree, widthProperty(), heightProperty(), controller);
 			break;
 		case HOUSE:
-			p = customObjectPainter.paintMovableObject(tree, widthProperty(), heightProperty(), controller);
+			p = houseObjectPainter.paintMovableObject(tree, widthProperty(), heightProperty(), controller);
 			break;
 		default:
 			break;

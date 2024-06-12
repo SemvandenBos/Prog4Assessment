@@ -9,18 +9,19 @@ public class Tree extends MovableObject {
 	private TreeType treeType;
 
 	// Constructor for reading files
-	public Tree(MovableObjectType objType, TreeType treeType, MovableObjectSize size, double relX, double relY) {
-		super(objType, relX, relY);
+	public Tree(TreeType treeType, MovableObjectSize size, double relX, double relY) {
+		super(MovableObjectType.TREE);
 		this.treeType = treeType;
 		this.treeSize = size;
-		movableObjectType = MovableObjectType.TREE;
+		relXproperty.set(relX);
+		relYproperty.set(relY);
 	}
 
+	// Constructor for adding randomised tree
 	public Tree(TreeType type) {
-		super();
+		super(MovableObjectType.TREE);
 		this.treeType = type;
 		this.treeSize = MovableObjectSize.randomSize();
-		movableObjectType = MovableObjectType.TREE;
 	}
 
 	public MovableObjectSize getObjectSize() {

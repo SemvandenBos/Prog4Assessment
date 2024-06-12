@@ -6,10 +6,15 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
+import enums.Biome;
 import enums.MovableObjectType;
 import enums.TreeType;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
@@ -18,21 +23,27 @@ import javafx.scene.input.KeyCode;
 public class World {
 	private static final int FRAMERATE = 24;
 	private static final double TREESPAWNCHANCE = 0.2;
+	private static final Biome[] BIOMES_LIST = { Biome.FOREST, Biome.TOWN, Biome.MAGICAL };
+	private IntegerProperty selectedBiome;
+
+	private int videoProgression;
 
 	private ListProperty<MovableObject> trees;
-	private boolean running;
+	private BooleanProperty running;
 	private Duck duck;
 	private Random random;
 
 	public World() {
 		trees = new SimpleListProperty<>(FXCollections.observableArrayList());
+		running = new SimpleBooleanProperty();
 		duck = new Duck();
 		random = new Random();
+		selectedBiome = new SimpleIntegerProperty();
 	}
 
 	public void toggleMovie() {
-		running = !running;
-		if (running) {
+		running.set(!running.get());
+		if (running.get()) {
 			TreeTask treeTask = new TreeTask();
 			Thread treeThread = new Thread(treeTask);
 			treeThread.setDaemon(true);
@@ -44,18 +55,17 @@ public class World {
 		@Override
 		protected Void call() throws Exception {
 			random = new Random();
-			while (running) {
+			while (running.get()) {
 				Platform.runLater(() -> {
 					// Used iterator to savely remove trees and 1 by 1
-					ListIterator<MovableObject> iter = trees.listIterator();
-					while (iter.hasNext()) {
-						if (iter.next().move()) {
-							iter.remove();
-						}
+					moveTrees();
+					handleSpawnObjects(videoProgression);
+					if (videoProgression > 10) {
+
+						changeBiome();
 					}
-					if (random.nextDouble() < TREESPAWNCHANCE) {
-						addTrees(1);
-					}
+					videoProgression++;
+					System.out.println(videoProgression);
 				});
 				try {
 					Thread.sleep(1000 / FRAMERATE);
@@ -65,24 +75,46 @@ public class World {
 			}
 			return null;
 		}
-	}
 
-	public void keyPressed(KeyCode keyCode) {
-		switch (keyCode) {
-		case D:
-			duck.toggleFlying();
-			break;
-		case LEFT:
-			duck.setFlySpeed(-1.0);
-			break;
-		case RIGHT:
-			duck.setFlySpeed(1.0);
-			break;
-		case DOWN:
-			duck.setFlySpeed(0);
-			break;
-		default:
-			break;
+		private void moveTrees() {
+			ListIterator<MovableObject> iter = trees.listIterator();
+			while (iter.hasNext()) {
+				if (iter.next().move()) {
+					iter.remove();
+				}
+			}
+		}
+
+		private void changeBiome() {
+			selectedBiome.set((selectedBiome.get() + 1) % BIOMES_LIST.length);
+			videoProgression = 0;
+		}
+
+		// TODO implement random spawn objects
+		private void handleSpawnObjects(int videoProgression) {
+			if (random.nextDouble() < TREESPAWNCHANCE) {
+				Tree t = new Tree(TreeType.randomType());
+				t.placeLeft();
+				addObjectAtIndex(t);
+			}
+
+			if (videoProgression % 50 != 0) {
+				return;
+			}
+			System.out.println("triggered");
+
+			switch (BIOMES_LIST[selectedBiome.get()]) {
+			case FOREST:
+				addOrb();
+				break;
+			case TOWN:
+
+				break;
+			case MAGICAL:
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -95,12 +127,12 @@ public class World {
 		trees.add(index, tree);
 	}
 
-	public void addTree(TreeType type) {
+	public void addTreeOfType(TreeType type) {
 		Tree t = new Tree(type);
 		addObjectAtIndex(t);
 	}
 
-	public void addTrees(int amountOfTrees) {
+	public void addRandomTrees(int amountOfTrees) {
 		for (int i = 0; i < amountOfTrees; i++) {
 			addObjectAtIndex(new Tree(TreeType.randomType()));
 		}
@@ -117,26 +149,49 @@ public class World {
 		trees.clear();
 	}
 
-	public List<MovableObject> getTrees() {
-		return trees.get();
-	}
-
 	public ListProperty<MovableObject> treesProperty() {
 		return trees;
-	}
-
-	public Duck getDuck() {
-		return duck;
 	}
 
 	public void addOrb() {
 		addObjectAtIndex(new MovableObject(MovableObjectType.HOUSE));
 	}
 
+//	----------DUCK--------------------
+
+	public void keyPressed(KeyCode keyCode) {
+		duck.keyPressed(keyCode);
+	}
+
+	public Duck getDuck() {
+		return duck;
+	}
+
+//	----------DRAG AND DROP----------------
+	public void setRelPoint(double xRel, double yRel, MovableObject movableObject) {
+		if (!running.get()) {
+			movableObject.setRelPoint(xRel, yRel);
+		}
+	}
+
 	public void adjustDepth(MovableObject movableObject) {
-		int index = trees.get().indexOf(movableObject);
-		System.out.println(index);
-		trees.get().remove(index);
-		addObjectAtIndex(movableObject);
+		if (!running.get()) {
+			int index = trees.get().indexOf(movableObject);
+			trees.get().remove(index);
+			addObjectAtIndex(movableObject);
+		}
+	}
+
+	public BooleanProperty getRunning() {
+		return running;
+	}
+
+//	----------BIOMES-------------------
+	public Biome getCurrentBiome() {
+		return BIOMES_LIST[selectedBiome.get()];
+	}
+
+	public IntegerProperty selectedBiomeProperty() {
+		return selectedBiome;
 	}
 }
