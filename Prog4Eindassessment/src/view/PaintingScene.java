@@ -1,72 +1,48 @@
 package view;
 
 import controller.Controller;
-import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import model.World;
 
 public class PaintingScene extends Scene {
-	private static final Double AUTHOGRAPH_SPACING = 10.0;
+
+	private static final double PAINTING_WIDTH = 800;
+	private static final double PAINTING_HEIGHT = 600;
 	private Controller mainController;
-	private PaintingPane paintingPane;
 	private MenuBar menuBar;
 	private Label autographLabel;
+
+	private Pane centerPane;
 
 	public PaintingScene(Controller controller, World world) {
 		super(new BorderPane());
 		this.mainController = controller;
-		this.menuBar = new TreeMenuBar(controller, this);
-		createPanes(world, controller);
-		createEventHandlers();
+		createChildren(controller, world);
+		layoutRoot();
+		setOnKeyPressed(e -> mainController.keyPressed(e.getCode()));
 	}
 
-	private void createEventHandlers() {
-		setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				mainController.keyPressed(event.getCode());
-			}
-		});
+	private void createChildren(Controller controller, World world) {
+		centerPane = new Pane();
+		this.autographLabel = new AutographLabel(centerPane);
+		menuBar = new TreeMenuBar(controller, this);
+
+		PaintingPane paintingPane = new PaintingPane(world, controller, centerPane);
+		DuckPane duckPane = new DuckPane(world.getDuck(), centerPane);
+		centerPane.getChildren().addAll(paintingPane, autographLabel, duckPane);
 	}
 
-	// TODO redundant? messy?
-	private void createPanes(World world, Controller controller) {
+	// create childrenPanes with right references
+	private void layoutRoot() {
 		BorderPane root = (BorderPane) getRoot();
-		root.setPrefSize(800, 600);
-
-		Pane wrapper = new Pane();
-		AnchorPane skyPane = new AnchorPane();
-		skyPane.prefWidthProperty().bind(wrapper.widthProperty());
-		skyPane.prefHeightProperty().bind(wrapper.heightProperty());
-		skyPane.setBackground(new Background(new BackgroundFill(Color.SKYBLUE, null, null)));
-
-		autographLabel = new Label("Sem van den Bos");
-		autographLabel.setAlignment(Pos.BOTTOM_RIGHT);
-		AnchorPane.setBottomAnchor(autographLabel, AUTHOGRAPH_SPACING);
-		AnchorPane.setRightAnchor(autographLabel, AUTHOGRAPH_SPACING);
-
-		paintingPane = new PaintingPane(world, controller);
-		paintingPane.prefHeightProperty().bind(skyPane.heightProperty().divide(2));
-		paintingPane.prefWidthProperty().bind(root.widthProperty());
-		AnchorPane.setBottomAnchor(paintingPane, 0.0);
-
-		DuckPane duckPane = new DuckPane(world.getDuck(), wrapper);
-
-		skyPane.getChildren().addAll(paintingPane, autographLabel);
-		wrapper.getChildren().addAll(skyPane, duckPane);
+		root.setPrefSize(PAINTING_WIDTH, PAINTING_HEIGHT);
 		root.setTop(menuBar);
-		root.setCenter(wrapper);
+		root.setCenter(centerPane);
 		setRoot(root);
 	}
 

@@ -1,30 +1,42 @@
 package model;
 
-import enums.MovableObjectSize;
+import java.util.Random;
+
 import enums.MovableObjectType;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 
-public abstract class MovableObject {
+public class MovableObject {
+	private static final double MOVEMENT_SPEED = 1;
+
 	protected DoubleProperty relXproperty;
 	protected DoubleProperty relYproperty;
-	protected MovableObjectSize treeSize;
+
 	protected MovableObjectType movableObjectType;
 
 	protected MovableObject() {
 		relXproperty = new SimpleDoubleProperty();
 		relYproperty = new SimpleDoubleProperty();
-		treeSize = MovableObjectSize.randomSize();
+		Random r = new Random();
+		relXproperty.set(r.nextDouble() * 100);
+		relYproperty.set(r.nextDouble() * 50 + 50);
 	}
 
-	protected MovableObject(MovableObjectSize size, double relX, double relY) {
+	protected MovableObject(MovableObjectType type) {
 		this();
+		this.movableObjectType = type;
+	}
+
+	protected MovableObject(MovableObjectType type, double relX, double relY) {
+		this(type);
 		relXproperty.set(relX);
 		relYproperty.set(relY);
-		treeSize = size;
 	}
 
-	public abstract void move();
+	public boolean move() {
+		relXproperty.set((relXproperty.get() + MOVEMENT_SPEED * (Math.pow(relYproperty.get() / 100.0, 3))));
+		return (relXproperty.get() > 110);
+	}
 
 	public double getRelX() {
 		return relXproperty.get() / 100;
@@ -32,10 +44,6 @@ public abstract class MovableObject {
 
 	public double getRelY() {
 		return relYproperty.get() / 100;
-	}
-
-	public MovableObjectSize getObjectSize() {
-		return treeSize;
 	}
 
 	public MovableObjectType getMovableObjectType() {

@@ -21,7 +21,7 @@ public class PineTreePainter extends TreePainter {
 	public Pane paintMovableObject(MovableObject tree, ReadOnlyDoubleProperty paintingXproperty,
 			ReadOnlyDoubleProperty paintingYproperty, Controller controller) {
 		Pane p = makeDefaultTreeBase(tree, paintingXproperty, paintingYproperty, controller);
-
+		
 		Arc arc = new Arc();
 		setBlackStroke(arc);
 		setColorForShapePerSize(arc, ((Tree) tree).getObjectSize(), PINE_HUE, PINE_SATURATION, PINE_BRIGHTNESS);

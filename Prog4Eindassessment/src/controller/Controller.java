@@ -29,7 +29,7 @@ public class Controller extends Application {
 		fileIO = new FileIO(stage);
 		world = new World();
 		paintingScene = new PaintingScene(this, world);
-		SoundHandler soundHandler = new SoundHandler(world);
+		new SoundHandler(world);
 	}
 
 	private void stageSettings() {
@@ -49,7 +49,7 @@ public class Controller extends Application {
 	}
 
 	public void addTreeBatch(int amountOfTrees) {
-		world.addTreeBatch(amountOfTrees);
+		world.addTrees(amountOfTrees);
 	}
 
 	public void toggleMovie() {
@@ -70,6 +70,14 @@ public class Controller extends Application {
 
 	public void setRelPoint(double xRel, double yRel, MovableObject movableObject) {
 		movableObject.setRelPoint(xRel, yRel);
+	}
+
+	public void addOrb() {
+		world.addOrb();
+	}
+
+	public void adjustDepth(MovableObject movableObject) {
+		world.adjustDepth(movableObject);
 	}
 
 }

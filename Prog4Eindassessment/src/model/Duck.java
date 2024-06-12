@@ -46,8 +46,7 @@ public class Duck extends MovableObject {
 				try {
 					Thread.sleep(1000 / DUCKFLY_FPS);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				}
 			}
 			return null;
@@ -60,7 +59,8 @@ public class Duck extends MovableObject {
 	}
 
 	@Override
-	public void move() {
+	public boolean move() {
 		relXproperty.set(relXproperty.get() + speed);
+		return false;// TODO
 	}
 }

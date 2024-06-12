@@ -3,7 +3,10 @@ package model;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.Random;
 
+import enums.MovableObjectType;
 import enums.TreeType;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
@@ -13,13 +16,18 @@ import javafx.concurrent.Task;
 import javafx.scene.input.KeyCode;
 
 public class World {
+	private static final int FRAMERATE = 24;
+	private static final double TREESPAWNCHANCE = 0.2;
+
 	private ListProperty<MovableObject> trees;
 	private boolean running;
 	private Duck duck;
+	private Random random;
 
 	public World() {
 		trees = new SimpleListProperty<>(FXCollections.observableArrayList());
 		duck = new Duck();
+		random = new Random();
 	}
 
 	public void toggleMovie() {
@@ -33,22 +41,26 @@ public class World {
 	}
 
 	private class TreeTask extends Task<Void> {
-
-		private static final int FRAMERATE = 24;
-
 		@Override
 		protected Void call() throws Exception {
+			random = new Random();
 			while (running) {
 				Platform.runLater(() -> {
-					for (MovableObject tree : trees) {
-						tree.move();
+					// Used iterator to savely remove trees and 1 by 1
+					ListIterator<MovableObject> iter = trees.listIterator();
+					while (iter.hasNext()) {
+						if (iter.next().move()) {
+							iter.remove();
+						}
+					}
+					if (random.nextDouble() < TREESPAWNCHANCE) {
+						addTrees(1);
 					}
 				});
 				try {
 					Thread.sleep(1000 / FRAMERATE);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Thread.currentThread().interrupt();
 				}
 			}
 			return null;
@@ -75,7 +87,7 @@ public class World {
 	}
 
 	// Find index in sorted tree list for depth view
-	private void addTreeAtIndex(MovableObject tree) {
+	private void addObjectAtIndex(MovableObject tree) {
 		int index = Collections.binarySearch(trees, tree, Comparator.comparingDouble(MovableObject::getRelY));
 		if (index < 0) {
 			index = -index - 1;
@@ -85,19 +97,19 @@ public class World {
 
 	public void addTree(TreeType type) {
 		Tree t = new Tree(type);
-		addTreeAtIndex(t);
+		addObjectAtIndex(t);
 	}
 
-	public void addTreeBatch(int amountOfTrees) {
+	public void addTrees(int amountOfTrees) {
 		for (int i = 0; i < amountOfTrees; i++) {
-			addTreeAtIndex(new Tree(TreeType.randomType()));
+			addObjectAtIndex(new Tree(TreeType.randomType()));
 		}
 	}
 
 	public void addTreeBatch(List<Tree> trees) {
 		clearAllTrees();
 		for (Tree tree : trees) {
-			addTreeAtIndex(tree);
+			addObjectAtIndex(tree);
 		}
 	}
 
@@ -115,5 +127,16 @@ public class World {
 
 	public Duck getDuck() {
 		return duck;
+	}
+
+	public void addOrb() {
+		addObjectAtIndex(new MovableObject(MovableObjectType.HOUSE));
+	}
+
+	public void adjustDepth(MovableObject movableObject) {
+		int index = trees.get().indexOf(movableObject);
+		System.out.println(index);
+		trees.get().remove(index);
+		addObjectAtIndex(movableObject);
 	}
 }

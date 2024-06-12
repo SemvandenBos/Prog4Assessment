@@ -1,34 +1,30 @@
 package model;
 
-import java.util.Random;
-
 import enums.MovableObjectSize;
 import enums.MovableObjectType;
 import enums.TreeType;
 
 public class Tree extends MovableObject {
-	private static final double MOVEMENT_SPEED = 1;
-
+	protected MovableObjectSize treeSize;
 	private TreeType treeType;
 
 	// Constructor for reading files
-	public Tree(TreeType type, MovableObjectSize size, double relX, double relY) {
-		super(size, relX, relY);
-		treeType = type;
+	public Tree(MovableObjectType objType, TreeType treeType, MovableObjectSize size, double relX, double relY) {
+		super(objType, relX, relY);
+		this.treeType = treeType;
+		this.treeSize = size;
 		movableObjectType = MovableObjectType.TREE;
 	}
 
 	public Tree(TreeType type) {
 		super();
 		this.treeType = type;
-		Random r = new Random();
-		relXproperty.set(r.nextDouble() * 100);
-		relYproperty.set(r.nextDouble() * 50 + 50);
+		this.treeSize = MovableObjectSize.randomSize();
+		movableObjectType = MovableObjectType.TREE;
 	}
 
-	@Override
-	public void move() {
-		relXproperty.set((relXproperty.get() + MOVEMENT_SPEED * (Math.pow(relYproperty.get() / 100.0, 3))) % 100);
+	public MovableObjectSize getObjectSize() {
+		return treeSize;
 	}
 
 //	-----------SETTERS AND GETTERS-------------------

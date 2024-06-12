@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import enums.MovableObjectSize;
+import enums.MovableObjectType;
 import enums.TreeType;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import model.MovableObject;
 import model.Tree;
 
 public class FileIO {
@@ -27,11 +29,12 @@ public class FileIO {
 		File f = new File("./Resources/paintings");
 		fc.setInitialDirectory(f);
 		fc.setTitle("Open .painting file to load");
-		fc.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.painting"));
+		fc.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.painting"),
+				new ExtensionFilter("Text Files", "*.superpainting")); // TODO
 	}
 
 	public List<Tree> loadPainting() {
-		File selectedFile = fc.showOpenDialog(stage);
+		File selectedFile = fc.showOpenDialog(null);
 		ArrayList<Tree> trees = new ArrayList<>();
 		if (selectedFile == null) {
 			return trees;
@@ -46,11 +49,12 @@ public class FileIO {
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return trees;
 		}
 		return trees;
 	}
 
+	// TODO implement proper error handling (user feedback?)
 	private void handleLine(String line, List<Tree> trees, int lineNr) {
 		String[] sem = line.split(":");
 		if (sem.length == 0) {
@@ -70,7 +74,7 @@ public class FileIO {
 				System.out.println("Coordinates out of bounds at line " + lineNr);
 				return;
 			}
-			trees.add(new Tree(type, size, relX, relY));
+			trees.add(new Tree(MovableObjectType.TREE, type, size, relX, relY));
 		} catch (NumberFormatException nfe) {
 			System.out.println("Wrong number on line " + lineNr);
 		} catch (IllegalArgumentException iae) {
@@ -78,7 +82,8 @@ public class FileIO {
 		}
 	}
 
-	public void savePainting(List<Tree> trees) {
+	// Write to a selected file
+	public void savePainting(List<MovableObject> movObjects) {
 		File selectedFile = fc.showSaveDialog(stage);
 		if (selectedFile == null) {
 			return;
@@ -94,8 +99,10 @@ public class FileIO {
 		}
 
 		StringBuilder builder = new StringBuilder();
-		for (Tree tree : trees) {
-			builder.append(tree.toString() + "\n");
+		for (MovableObject movObject : movObjects) {
+			if (movObject instanceof Tree) {
+				builder.append(movObject.toString() + "\n");
+			}
 		}
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(selectedFile))) {
 			bw.write(builder.toString());
