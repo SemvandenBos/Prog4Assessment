@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import enums.MovableObjectSize;
+import enums.TreeSize;
 import enums.TreeType;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -65,7 +65,7 @@ public class FileIO {
 		}
 		try {
 			TreeType type = TreeType.valueOf(sem[0].toUpperCase());
-			MovableObjectSize size = MovableObjectSize.valueOf(sem[1].toUpperCase());
+			TreeSize size = TreeSize.valueOf(sem[1].toUpperCase());
 			double relX = Double.parseDouble(sem[2]);
 			double relY = Double.parseDouble(sem[3]);
 			if (relX < 0 || relX > 100 || relY < 50 || relY > 100) {

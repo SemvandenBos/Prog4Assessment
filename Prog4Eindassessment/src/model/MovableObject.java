@@ -25,12 +25,6 @@ public class MovableObject {
 		this.movableObjectType = type;
 	}
 
-//	protected MovableObject(MovableObjectType type, double relX, double relY) {
-//		this(type);
-//		relXproperty.set(relX);
-//		relYproperty.set(relY);
-//	}
-
 	public MovableObject(MovableObjectType type, boolean isLeft) {
 		this(type);
 		if (isLeft) {

@@ -1,9 +1,10 @@
 package view;
 
 import controller.Controller;
-import enums.MovableObjectSize;
+import enums.TreeSize;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -46,7 +47,7 @@ public abstract class TreePainter extends MovableObjectPainter {
 		return doubleBinding.multiply(constant * t.getObjectSize().getSizeScaleValue());
 	}
 
-	protected Color adjustHSBcolor(Color c, MovableObjectSize size) {
+	protected Color adjustHSBcolor(Color c, TreeSize size) {
 		double newSaturation = c.getSaturation() + size.getColorSaturation();
 		double newBrightness = c.getBrightness() + size.getColorBrightness();
 		return Color.hsb(c.getHue(), newSaturation, newBrightness);

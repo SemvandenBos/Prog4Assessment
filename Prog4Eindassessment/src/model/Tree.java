@@ -1,15 +1,15 @@
 package model;
 
-import enums.MovableObjectSize;
+import enums.TreeSize;
 import enums.MovableObjectType;
 import enums.TreeType;
 
 public class Tree extends MovableObject {
-	protected MovableObjectSize treeSize;
+	protected TreeSize treeSize;
 	private TreeType treeType;
 
 	// Constructor for reading files
-	public Tree(TreeType treeType, MovableObjectSize size, double relX, double relY) {
+	public Tree(TreeType treeType, TreeSize size, double relX, double relY) {
 		super(MovableObjectType.TREE);
 		this.treeType = treeType;
 		this.treeSize = size;
@@ -21,10 +21,10 @@ public class Tree extends MovableObject {
 	public Tree(TreeType type) {
 		super(MovableObjectType.TREE);
 		this.treeType = type;
-		this.treeSize = MovableObjectSize.randomSize();
+		this.treeSize = TreeSize.randomSize();
 	}
 
-	public MovableObjectSize getObjectSize() {
+	public TreeSize getObjectSize() {
 		return treeSize;
 	}
 

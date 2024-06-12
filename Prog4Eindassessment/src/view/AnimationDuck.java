@@ -50,7 +50,7 @@ class AnimationDuck extends ImageView {
 
 	public void stopFly() {
 		flyTimeline.stop();
-		setVisible(false);
+//		setVisible(false);
 	}
 
 }

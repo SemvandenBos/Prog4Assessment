@@ -3,20 +3,25 @@ package view;
 import controller.Controller;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
 import model.MovableObject;
 
-public class CustomObjectPainter extends MovableObjectPainter {
-	private static final double BALL_RADIUS = 40;
+public class HousePainter extends MovableObjectPainter {
+
+	public HousePainter() {
+
+	}
 
 	@Override
 	public Pane paintMovableObject(MovableObject movableObject, ReadOnlyDoubleProperty paintingXproperty,
 			ReadOnlyDoubleProperty paintingYproperty, Controller controller) {
 		Pane p = makeDefaultMovablePane(movableObject, paintingXproperty, paintingYproperty, controller);
-		Circle c = new Circle(BALL_RADIUS);
-		c.radiusProperty().bind(getSizeBindingForConstant(movableObject, BALL_RADIUS));
-		p.getChildren().add(c);
+
+		Polygon polygon = new Polygon();
+		polygon.getPoints().addAll(new Double[] { 0.0, 0.0, 20.0, 10.0, 10.0, 20.0 });
+		//TODO
+		p.getChildren().add(polygon);
+
 		return p;
 	}
-
 }

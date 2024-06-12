@@ -8,24 +8,15 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import model.MovableObject;
-import model.Tree;
 import model.World;
 
 public class PaintingPane extends Pane {
-	private LeafTreePainter leafTreePainter;
-	private PineTreePainter pineTreePainter;
-	private CustomObjectPainter houseObjectPainter;
-
-	private Controller controller;
+	private PainterManager painterManager;
 	private Pane skyPane;
 
 	public PaintingPane(World world, Controller controller, Pane wrapper) {
-		this.controller = controller;
 		skyPane = new Pane();
-
-		leafTreePainter = new LeafTreePainter();
-		pineTreePainter = new PineTreePainter();
-		houseObjectPainter = new CustomObjectPainter();
+		painterManager = new PainterManager(controller, widthProperty(), heightProperty());
 
 		getChildren().add(skyPane);
 
@@ -76,35 +67,8 @@ public class PaintingPane extends Pane {
 		this.setBackground(new Background(new BackgroundFill(groundColor, null, null)));
 	}
 
-	// TODO hoe en wat? niet chill
 	private void addSingleMovableObject(MovableObject tree, int index) {
-		Pane p = null;
-		switch (tree.getMovableObjectType()) {
-		case TREE:
-			p = addSingleTree((Tree) tree);
-			break;
-		case BUSH:
-			p = pineTreePainter.paintMovableObject(tree, widthProperty(), heightProperty(), controller);
-			break;
-		case HOUSE:
-			p = houseObjectPainter.paintMovableObject(tree, widthProperty(), heightProperty(), controller);
-			break;
-		default:
-			break;
-		}
+		Pane p = painterManager.getPane(tree);
 		getChildren().add(index + 1, p);
-	}
-
-	private Pane addSingleTree(Tree tree) {
-		Pane p = null;
-		switch (tree.getTreeType()) {
-		case LEAF:
-			p = leafTreePainter.paintMovableObject(tree, widthProperty(), heightProperty(), controller);
-			break;
-		case PINE:
-			p = pineTreePainter.paintMovableObject(tree, widthProperty(), heightProperty(), controller);
-			break;
-		}
-		return p;
 	}
 }

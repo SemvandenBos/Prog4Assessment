@@ -13,13 +13,13 @@ public class DuckPane extends StackPane {
 
 	public DuckPane(World world, Pane root) {
 		setBindings(world.getDuck(), root);
-
 		Image image = new Image(DUCK_IMG_PATH);
 		animationDuck = new AnimationDuck(image, 3, 2);
 
 		getChildren().add(animationDuck);
+
+		world.getDuck().isActiveProperty().addListener((ov, o, n) -> setActive(n));
 		world.getDuck().isFlyingProperty().addListener((ov, o, n) -> setFlying(n));
-		world.getDuck().isFlyingProperty().and(world.getRunning());
 	}
 
 	private void setBindings(Duck duck, Pane paintingPane) {
@@ -31,16 +31,15 @@ public class DuckPane extends StackPane {
 		layoutYProperty().bind(layoutY);
 	}
 
+	private void setActive(boolean isActive) {
+		animationDuck.setVisible(isActive);
+	}
+
 	private void setFlying(boolean isFlying) {
 		if (isFlying) {
 			animationDuck.fly();
 		} else {
 			animationDuck.stopFly();
 		}
-//		if (isFlying) {
-//			animationDuck.fly();
-//		} else {
-//			animationDuck.stopFly();
-//		}
 	}
 }

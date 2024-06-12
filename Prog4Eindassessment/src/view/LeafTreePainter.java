@@ -2,6 +2,7 @@ package view;
 
 import controller.Controller;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -28,6 +29,7 @@ public class LeafTreePainter extends TreePainter {
 		c.layoutYProperty().bind(getSizeBindingForConstant(movableObject, TRUNK_HEIGHT).negate());
 
 		p.getChildren().add(c);
+
 		return p;
 	}
 }

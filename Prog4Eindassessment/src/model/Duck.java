@@ -2,6 +2,7 @@ package model;
 
 import enums.MovableObjectType;
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
@@ -9,17 +10,24 @@ import javafx.scene.input.KeyCode;
 
 public class Duck extends MovableObject {
 	private static final double INITIAL_X = 50.0;
-	private BooleanProperty isFlying;
+	private BooleanProperty isActiveProperty;
+	private BooleanBinding isFlyingProperty;
 	private double speed;
 
-	public Duck() {
+	public Duck(BooleanProperty running) {
 		super(MovableObjectType.DUCK);
-		isFlying = new SimpleBooleanProperty(false);
+		isActiveProperty = new SimpleBooleanProperty(false);
+		this.isFlyingProperty = isActiveProperty.and(running);
+		isFlyingProperty.addListener((ov, o, n) -> startThread());
 		reset();
 	}
 
-	public BooleanProperty isFlyingProperty() {
-		return isFlying;
+	private void startThread() {
+		if (isFlyingProperty.get()) {
+			Thread duckFlyThread = new Thread(new DuckFlyTask());
+			duckFlyThread.setDaemon(true);
+			duckFlyThread.start();
+		}
 	}
 
 	private void reset() {
@@ -28,14 +36,9 @@ public class Duck extends MovableObject {
 		speed = 0.0;
 	}
 
-	public void toggleFlying() {
-		this.isFlying.set(!isFlying.get());
-		if (isFlying.get()) {
-			reset();
-			Thread duckFlyThread = new Thread(new DuckFlyTask());
-			duckFlyThread.setDaemon(true);
-			duckFlyThread.start();
-		}
+	public void toggleActive() {
+		this.isActiveProperty.set(!isActiveProperty.get());
+		reset();
 	}
 
 	private class DuckFlyTask extends Task<Void> {
@@ -43,8 +46,8 @@ public class Duck extends MovableObject {
 		private static final int DUCKFLY_FPS = 11;
 
 		@Override
-		protected Void call() throws Exception {
-			while (isFlying.get()) {
+		protected Void call() {
+			while (isFlyingProperty.get()) {
 				Platform.runLater(Duck.this::move);
 				try {
 					Thread.sleep(1000 / DUCKFLY_FPS);
@@ -64,13 +67,13 @@ public class Duck extends MovableObject {
 	@Override
 	public boolean move() {
 		relXproperty.set(relXproperty.get() + speed);
-		return false;// TODO
+		return false;
 	}
 
 	public void keyPressed(KeyCode keyCode) {
 		switch (keyCode) {
 		case D:
-			toggleFlying();
+			toggleActive();
 			break;
 		case LEFT:
 			setFlySpeed(-1.0);
@@ -84,5 +87,13 @@ public class Duck extends MovableObject {
 		default:
 			break;
 		}
+	}
+
+	public BooleanProperty isActiveProperty() {
+		return isActiveProperty;
+	}
+
+	public BooleanBinding isFlyingProperty() {
+		return isFlyingProperty;
 	}
 }

@@ -36,7 +36,7 @@ public class World {
 	public World() {
 		trees = new SimpleListProperty<>(FXCollections.observableArrayList());
 		running = new SimpleBooleanProperty();
-		duck = new Duck();
+		duck = new Duck(running);
 		random = new Random();
 		selectedBiome = new SimpleIntegerProperty();
 	}
@@ -60,12 +60,11 @@ public class World {
 					// Used iterator to savely remove trees and 1 by 1
 					moveTrees();
 					handleSpawnObjects(videoProgression);
-					if (videoProgression > 10) {
-
+					if (videoProgression > 100) {
 						changeBiome();
 					}
 					videoProgression++;
-					System.out.println(videoProgression);
+//					System.out.println(videoProgression);
 				});
 				try {
 					Thread.sleep(1000 / FRAMERATE);
@@ -154,7 +153,7 @@ public class World {
 	}
 
 	public void addOrb() {
-		addObjectAtIndex(new MovableObject(MovableObjectType.HOUSE));
+		addObjectAtIndex(new MovableObject(MovableObjectType.WINDMILL));
 	}
 
 //	----------DUCK--------------------
