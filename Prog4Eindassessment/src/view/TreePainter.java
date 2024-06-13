@@ -2,12 +2,12 @@ package view;
 
 import controller.Controller;
 import enums.TreeSize;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import model.MovableObject;
 import model.Tree;
 
@@ -15,41 +15,41 @@ public abstract class TreePainter extends MovableObjectPainter {
 	private static final double TRUNK_WIDTH = 20.0;
 	protected static final double TRUNK_HEIGHT = 100.0;
 
-	protected Pane makeDefaultTreeBase(MovableObject tree, ReadOnlyDoubleProperty paintingXproperty,
-			ReadOnlyDoubleProperty paintingYproperty, Controller controller) {
-		Pane treePane = makeDefaultMovablePane(tree, paintingXproperty, paintingYproperty, controller);
-		treePane.getChildren().add(makeTrunk(tree));
+	protected TreePainter(ReadOnlyDoubleProperty paintingXproperty, ReadOnlyDoubleProperty paintingYproperty,
+			Controller controller) {
+		super(paintingXproperty, paintingYproperty, controller);
+	}
+
+	protected Pane makeDefaultTreeBase(MovableObject tree) {
+		Pane treePane = makeDefaultMovablePane(tree);
+//		treePane.getChildren().add(makeTrunk(tree));
 		return treePane;
 	}
 
 	private Rectangle makeTrunk(MovableObject tree) {
-		Rectangle trunk = new Rectangle();
+		double trunkWidth = realSize(tree, TRUNK_WIDTH);
+		double trunkHeight = realSize(tree, TRUNK_HEIGHT);
+		Rectangle trunk = new Rectangle(-0.5 * trunkWidth, -trunkHeight, trunkWidth, trunkHeight);
 		trunk.setFill(Color.BROWN);
 		setBlackStroke(trunk);
-
-		DoubleBinding bindingHeight = getSizeBindingForConstant(tree, TRUNK_HEIGHT);
-		DoubleBinding bindingWidth = getSizeBindingForConstant(tree, TRUNK_WIDTH);
-
-		trunk.heightProperty().bind(bindingHeight);
-		trunk.widthProperty().bind(bindingWidth);
-		trunk.layoutYProperty().bind(bindingHeight.negate());
-		trunk.layoutXProperty().bind(bindingWidth.multiply(-0.5));
 		return trunk;
 	}
 
 	@Override
-	// Override to implement treeSize scale for all but only trees
-	protected DoubleBinding getSizeBindingForConstant(MovableObject movableObject, double constant) {
-		Tree t = (Tree) movableObject;
-		DoubleBinding doubleBinding = movableObject.getRelYproperty().subtract(35).divide(65);// TODO OOK MAGIC NUMBERS,
-																								// zelfde als
-																								// MOpainter
-		return doubleBinding.multiply(constant * t.getObjectSize().getSizeScaleValue());
+	protected Group makeGroup(MovableObject tree) {
+		Group group = super.makeGroup(tree);
+		group.getChildren().add(makeTrunk(tree));
+		return group;
 	}
 
-	protected Color adjustHSBcolor(Color c, TreeSize size) {
+	protected double realSize(MovableObject tree, double constant) {
+		return constant * ((Tree) tree).getObjectSize().getSizeScaleValue();
+	}
+
+	protected void adjustHSBcolor(Shape shape, Color c, TreeSize size) {
+		setBlackStroke(shape);
 		double newSaturation = c.getSaturation() + size.getColorSaturation();
 		double newBrightness = c.getBrightness() + size.getColorBrightness();
-		return Color.hsb(c.getHue(), newSaturation, newBrightness);
+		shape.setFill(Color.hsb(c.getHue(), newSaturation, newBrightness));
 	}
 }

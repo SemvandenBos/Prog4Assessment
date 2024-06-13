@@ -1,6 +1,7 @@
 package view;
 
 import controller.Controller;
+import enums.MovableObjectType;
 import enums.TreeType;
 import javafx.application.Platform;
 import javafx.scene.control.CheckMenuItem;
@@ -14,11 +15,11 @@ import javafx.scene.text.Font;
 public class PaintingMenuBar extends MenuBar {
 	private static final double FONT_SIZE = 24.0;
 
-	private Controller mainController;
+	private Controller controller;
 	private PaintingScene paintingScene;
 
 	public PaintingMenuBar(Controller mainController, PaintingScene scene) {
-		this.mainController = mainController;
+		this.controller = mainController;
 		this.paintingScene = scene;
 		createMenuBar();
 	}
@@ -28,17 +29,17 @@ public class PaintingMenuBar extends MenuBar {
 		Menu treeMenu = createTreeMenu();
 		Menu autographMenu = createAutographMenu();
 		Menu movieMenu = createMovieMenu();
-		Menu extraObjectsMenu = createExtraObjectMenu();
+		Menu extraObjectsMenu = createWesternObjectMenu();
 
 		getMenus().addAll(fileMenu, treeMenu, autographMenu, movieMenu, extraObjectsMenu);
 	}
 
 	private Menu createFileMenu() {
 		MenuItem loadItem = new MenuItem("load painting...");
-		loadItem.setOnAction(e -> mainController.loadPainting());
+		loadItem.setOnAction(e -> controller.loadPainting());
 
 		MenuItem saveAsItem = new MenuItem("save painting as...");
-		saveAsItem.setOnAction(e -> mainController.savePainting());
+		saveAsItem.setOnAction(e -> controller.savePainting());
 
 		MenuItem exitItem = new MenuItem("exit");
 		exitItem.setOnAction(e -> Platform.exit());
@@ -50,22 +51,22 @@ public class PaintingMenuBar extends MenuBar {
 
 	private Menu createTreeMenu() {
 		MenuItem addLeafItem = new MenuItem("add Leaf Tree");
-		addLeafItem.setOnAction(e -> mainController.addTree(TreeType.LEAF));
+		addLeafItem.setOnAction(e -> controller.addTree(TreeType.LEAF));
 
 		MenuItem addPineItem = new MenuItem("add Pine Tree");
-		addPineItem.setOnAction(e -> mainController.addTree(TreeType.PINE));
+		addPineItem.setOnAction(e -> controller.addTree(TreeType.PINE));
 
 		MenuItem addBatchItem = new MenuItem("add 100 Trees");
-		addBatchItem.setOnAction(e -> mainController.addTreeBatch(100));
+		addBatchItem.setOnAction(e -> controller.addTreeBatch(100));
 
 		MenuItem addLeet = new MenuItem("add 1337 Trees");
-		addLeet.setOnAction(e -> mainController.addTreeBatch(1337));
+		addLeet.setOnAction(e -> controller.addTreeBatch(1337));
 
 		MenuItem addThousands = new MenuItem("add 9001 Trees!");
-		addThousands.setOnAction(e -> mainController.addTreeBatch(9001));
+		addThousands.setOnAction(e -> controller.addTreeBatch(9001));
 
 		MenuItem clearItem = new MenuItem("clear all Trees");
-		clearItem.setOnAction(e -> mainController.clearAllTrees());
+		clearItem.setOnAction(e -> controller.clearAllTrees());
 
 		Menu treeMenu = new Menu("Tree");
 		treeMenu.getItems().addAll(addLeafItem, addPineItem, addBatchItem, addLeet, addThousands, clearItem);
@@ -93,19 +94,25 @@ public class PaintingMenuBar extends MenuBar {
 
 	private Menu createMovieMenu() {
 		CheckMenuItem playItem = new CheckMenuItem("play");
-		playItem.setOnAction(e -> mainController.toggleMovie());
+		playItem.setOnAction(e -> controller.toggleMovie());
+		MenuItem nextBiome = new MenuItem("next biome");
+		nextBiome.setOnAction(e -> controller.nextBiome());
 
 		Menu movieMenu = new Menu("Movie");
-		movieMenu.getItems().add(playItem);
+		movieMenu.getItems().addAll(playItem, nextBiome);
 		return movieMenu;
 	}
 
-	private Menu createExtraObjectMenu() {
-		MenuItem orbItem = new MenuItem("orb");
-		orbItem.setOnAction(e -> mainController.addOrb());
+	private Menu createWesternObjectMenu() {
+		MenuItem windmillItem = new MenuItem("windmill");
+		windmillItem.setOnAction(e -> controller.addMovableObject(MovableObjectType.WINDMILL));
+		MenuItem tumbleWeedItem = new MenuItem("tumbleweed");
+		tumbleWeedItem.setOnAction(e -> controller.addMovableObject(MovableObjectType.TUMBLEWEED));
+		MenuItem packmanItem = new MenuItem("packmannn");
+		packmanItem.setOnAction(e -> controller.addMovableObject(MovableObjectType.PACKMAN));
 
 		Menu extraObjectsMenu = new Menu("extra objects");
-		extraObjectsMenu.getItems().addAll(orbItem);
+		extraObjectsMenu.getItems().addAll(windmillItem, tumbleWeedItem, packmanItem);
 		return extraObjectsMenu;
 	}
 

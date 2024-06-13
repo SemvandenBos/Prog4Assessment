@@ -1,7 +1,7 @@
 package enums;
 
 public enum Biome {
-	FOREST("SKYBLUE", "GREEN"), TOWN("SKYBLUE", "SANDYBROWN"), MAGICAL("BLUE", "RED");
+	FOREST("SKYBLUE", "GREEN"), WESTERN_FIELDS("SKYBLUE", "SANDYBROWN"), TOWN("LIGHTSKYBLUE", "LIMEGREEN");
 
 	private String skyColor;
 	private String groundColor;

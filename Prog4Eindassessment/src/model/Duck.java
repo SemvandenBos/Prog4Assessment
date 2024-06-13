@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 
 public class Duck extends MovableObject {
 	private static final double INITIAL_X = 50.0;
+	private static final double INITIAL_Y = 25.0;
 	private BooleanProperty isActiveProperty;
 	private BooleanBinding isFlyingProperty;
 	private double speed;
@@ -32,7 +33,7 @@ public class Duck extends MovableObject {
 
 	private void reset() {
 		relXproperty.set(INITIAL_X);
-		relYproperty.set(25.0);
+		relYproperty.set(INITIAL_Y);
 		speed = 0.0;
 	}
 
@@ -57,7 +58,6 @@ public class Duck extends MovableObject {
 			}
 			return null;
 		}
-
 	}
 
 	public void setFlySpeed(double speed) {

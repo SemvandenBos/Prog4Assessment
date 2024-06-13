@@ -1,20 +1,18 @@
 package view;
 
 import javafx.beans.binding.DoubleBinding;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import model.Duck;
 import model.World;
 
 public class DuckPane extends StackPane {
-	private static final String DUCK_IMG_PATH = "./pics/duckshapes.png";
 	private AnimationDuck animationDuck;
 
 	public DuckPane(World world, Pane root) {
 		setBindings(world.getDuck(), root);
-		Image image = new Image(DUCK_IMG_PATH);
-		animationDuck = new AnimationDuck(image, 3, 2);
+
+		animationDuck = new AnimationDuck();
 
 		getChildren().add(animationDuck);
 

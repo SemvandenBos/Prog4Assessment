@@ -14,22 +14,24 @@ public class LeafTreePainter extends TreePainter {
 	private static final double LEAF_RADIUS = 30;
 	private static final Color BASE_COLOR = Color.hsb(113, 0.7, 0.7);
 
+	public LeafTreePainter(ReadOnlyDoubleProperty paintingXproperty, ReadOnlyDoubleProperty paintingYproperty, Controller controller) {
+		super(paintingXproperty, paintingYproperty, controller);
+	}
+
 	@Override
-	public Pane paintMovableObject(MovableObject movableObject, ReadOnlyDoubleProperty paintingXproperty,
-			ReadOnlyDoubleProperty paintingYproperty, Controller controller) {
-		Pane p = makeDefaultTreeBase(movableObject, paintingXproperty, paintingYproperty, controller);
-		Circle c = new Circle();
+	public Pane paintMovableObject(MovableObject tree) {
+		Pane p = makeDefaultTreeBase(tree);
+		double leafHeight = realSize(tree, -TRUNK_HEIGHT);
+		double leafRadius = realSize(tree, LEAF_RADIUS);
+		Circle leaves = new Circle(0, leafHeight, leafRadius);
 
 		// Styling
-		setBlackStroke(c);
-		c.setFill(adjustHSBcolor(BASE_COLOR, ((Tree) movableObject).getObjectSize()));
+//		setBlackStroke(leaves);
+		adjustHSBcolor(leaves, BASE_COLOR, ((Tree) tree).getObjectSize());
 
-		// Binding
-		c.radiusProperty().bind(getSizeBindingForConstant(movableObject, LEAF_RADIUS));
-		c.layoutYProperty().bind(getSizeBindingForConstant(movableObject, TRUNK_HEIGHT).negate());
-
-		p.getChildren().add(c);
-
+		Group group = makeGroup(tree);
+		group.getChildren().add(leaves);
+		p.getChildren().add(group);
 		return p;
 	}
 }

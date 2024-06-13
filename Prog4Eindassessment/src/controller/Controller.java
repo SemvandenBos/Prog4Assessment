@@ -1,5 +1,6 @@
 package controller;
 
+import enums.MovableObjectType;
 import enums.TreeType;
 import javafx.application.Application;
 import javafx.scene.input.KeyCode;
@@ -57,7 +58,7 @@ public class Controller extends Application {
 	}
 
 	public void loadPainting() {
-		world.addTreeBatch(fileIO.loadPainting());
+		world.addTreeList(fileIO.loadPainting());
 	}
 
 	public void savePainting() {
@@ -68,8 +69,8 @@ public class Controller extends Application {
 		world.keyPressed(keyCode);
 	}
 
-	public void addOrb() {
-		world.addOrb();
+	public void addMovableObject(MovableObjectType type) {
+		world.addMovableObject(type);
 	}
 
 	public void setRelPoint(double xRel, double yRel, MovableObject movableObject) {
@@ -80,4 +81,7 @@ public class Controller extends Application {
 		world.adjustDepth(movableObject);
 	}
 
+	public void nextBiome() {
+		world.nextBiome();
+	}
 }

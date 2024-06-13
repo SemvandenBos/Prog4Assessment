@@ -11,9 +11,9 @@ public class AutographLabel extends Label {
 	public AutographLabel(Pane centerPane) {
 		setText("Sem van den Bos");
 		setAlignment(Pos.BOTTOM_RIGHT);
-		DoubleBinding x = centerPane.widthProperty().subtract(widthProperty()).subtract(AUTOGRAPH_SPACING);
-		DoubleBinding y = centerPane.heightProperty().subtract(heightProperty()).subtract(AUTOGRAPH_SPACING);
-		layoutXProperty().bind(x);
-		layoutYProperty().bind(y);
+		DoubleBinding xBinding = centerPane.widthProperty().subtract(widthProperty()).subtract(AUTOGRAPH_SPACING);
+		DoubleBinding yBinding = centerPane.heightProperty().subtract(heightProperty()).subtract(AUTOGRAPH_SPACING);
+		layoutXProperty().bind(xBinding);
+		layoutYProperty().bind(yBinding);
 	}
 }

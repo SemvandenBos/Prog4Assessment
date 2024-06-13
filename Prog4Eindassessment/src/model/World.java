@@ -22,8 +22,8 @@ import javafx.scene.input.KeyCode;
 
 public class World {
 	private static final int FRAMERATE = 24;
-	private static final double TREESPAWNCHANCE = 0.2;
-	private static final Biome[] BIOMES_LIST = { Biome.FOREST, Biome.TOWN, Biome.MAGICAL };
+	private static final double TREESPAWNCHANCE = 0.3;
+	private static final Biome[] BIOMES_LIST = { Biome.FOREST, Biome.WESTERN_FIELDS, Biome.TOWN };
 	private IntegerProperty selectedBiome;
 
 	private int videoProgression;
@@ -52,19 +52,20 @@ public class World {
 	}
 
 	private class TreeTask extends Task<Void> {
+		private static final int BIOME_DURATION = 249;
+		private static final int SPECIAL_OBJECT_FREQUENCY = 25;
+
 		@Override
 		protected Void call() throws Exception {
 			random = new Random();
 			while (running.get()) {
 				Platform.runLater(() -> {
-					// Used iterator to savely remove trees and 1 by 1
 					moveTrees();
 					handleSpawnObjects(videoProgression);
-					if (videoProgression > 100) {
-						changeBiome();
+					if (videoProgression > BIOME_DURATION) {
+						nextBiome();
 					}
 					videoProgression++;
-//					System.out.println(videoProgression);
 				});
 				try {
 					Thread.sleep(1000 / FRAMERATE);
@@ -75,6 +76,7 @@ public class World {
 			return null;
 		}
 
+		// Uses iterator to safely delete while looping
 		private void moveTrees() {
 			ListIterator<MovableObject> iter = trees.listIterator();
 			while (iter.hasNext()) {
@@ -84,32 +86,32 @@ public class World {
 			}
 		}
 
-		private void changeBiome() {
-			selectedBiome.set((selectedBiome.get() + 1) % BIOMES_LIST.length);
-			videoProgression = 0;
-		}
-
-		// TODO implement random spawn objects
 		private void handleSpawnObjects(int videoProgression) {
-			if (random.nextDouble() < TREESPAWNCHANCE) {
-				Tree t = new Tree(TreeType.randomType());
-				t.placeLeft();
-				addObjectAtIndex(t);
-			}
-
-			if (videoProgression % 50 != 0) {
-				return;
-			}
-			System.out.println("triggered");
-
+			double randDouble = random.nextDouble();
 			switch (BIOMES_LIST[selectedBiome.get()]) {
 			case FOREST:
-				addOrb();
+				if (randDouble < TREESPAWNCHANCE) {
+					Tree t = new Tree(TreeType.randomType(), false);
+					t.placeLeft();
+					addObjectAtIndex(t);
+				}
+				break;
+			case WESTERN_FIELDS:
+				if (videoProgression % SPECIAL_OBJECT_FREQUENCY == 0) {
+					addMovableObject(MovableObjectType.WINDMILL);
+					addMovableObject(MovableObjectType.TUMBLEWEED);
+				}
 				break;
 			case TOWN:
-
-				break;
-			case MAGICAL:
+				if (randDouble < TREESPAWNCHANCE / 3f) {
+					Tree t = new Tree(TreeType.randomType(), false);
+					t.placeLeft();
+					addObjectAtIndex(t);
+				}
+				if (videoProgression % SPECIAL_OBJECT_FREQUENCY == 0) {
+					addMovableObject(MovableObjectType.HOUSE);
+					addMovableObject(MovableObjectType.WHEATPATCH);
+				}
 				break;
 			default:
 				break;
@@ -127,17 +129,17 @@ public class World {
 	}
 
 	public void addTreeOfType(TreeType type) {
-		Tree t = new Tree(type);
+		Tree t = new Tree(type, true);
 		addObjectAtIndex(t);
 	}
 
 	public void addRandomTrees(int amountOfTrees) {
 		for (int i = 0; i < amountOfTrees; i++) {
-			addObjectAtIndex(new Tree(TreeType.randomType()));
+			addObjectAtIndex(new Tree(TreeType.randomType(), true));
 		}
 	}
 
-	public void addTreeBatch(List<Tree> trees) {
+	public void addTreeList(List<Tree> trees) {
 		clearAllTrees();
 		for (Tree tree : trees) {
 			addObjectAtIndex(tree);
@@ -152,12 +154,11 @@ public class World {
 		return trees;
 	}
 
-	public void addOrb() {
-		addObjectAtIndex(new MovableObject(MovableObjectType.WINDMILL));
+	public void addMovableObject(MovableObjectType type) {
+		addObjectAtIndex(new MovableObject(type));
 	}
 
 //	----------DUCK--------------------
-
 	public void keyPressed(KeyCode keyCode) {
 		duck.keyPressed(keyCode);
 	}
@@ -192,5 +193,10 @@ public class World {
 
 	public IntegerProperty selectedBiomeProperty() {
 		return selectedBiome;
+	}
+
+	public void nextBiome() {
+		selectedBiome.set((selectedBiome.get() + 1) % BIOMES_LIST.length);
+		videoProgression = 0;
 	}
 }

@@ -20,20 +20,27 @@ import model.Tree;
 public class FileIO {
 	private static final int EXPECTED_NR_OF_ARGS = 4;
 	private static final String SPLIT_CHARACTER = ":";
+	private static final String INITIAL_DIRECTORY = "./Resources/paintings";
+	private static final String LINEBREAK = System.lineSeparator();
+	private static final int LOWER_X_BOUND = 0;
+	private static final int UPPER_X_BOUND = 100;
+	private static final int LOWER_Y_BOUND = 50;
+	private static final int UPPER_Y_BOUND = 100;
+
 	private FileChooser fc;
 	private Stage stage;
 
 	public FileIO(Stage stage) {
 		this.stage = stage;
 		fc = new FileChooser();
-		File f = new File("./Resources/paintings");
-		fc.setInitialDirectory(f);
+		File initialDirectoryFile = new File(INITIAL_DIRECTORY);
+		fc.setInitialDirectory(initialDirectoryFile);
 		fc.setTitle("Open .painting file to load");
 		fc.getExtensionFilters().addAll(new ExtensionFilter("Text Files", "*.painting"));
 	}
 
 	public List<Tree> loadPainting() {
-		File selectedFile = fc.showOpenDialog(null);
+		File selectedFile = fc.showSaveDialog(null);
 		ArrayList<Tree> trees = new ArrayList<>();
 		if (selectedFile == null) {
 			return trees;
@@ -46,37 +53,26 @@ public class FileIO {
 				handleLine(line, trees, lineNr);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			return trees;
 		}
 		return trees;
 	}
 
-	// TODO implement proper error handling (user feedback?)
 	private void handleLine(String line, List<Tree> trees, int lineNr) {
-		String[] sem = line.split(SPLIT_CHARACTER);
-		if (sem.length == 0) {
-			System.out.println("Empty line at " + lineNr);
-			return;
-		}
-		if (sem.length != EXPECTED_NR_OF_ARGS) {
-			System.out.println("Error at " + lineNr + ": nr of args incorrect");
+		String[] splitString = line.split(SPLIT_CHARACTER);
+		if (splitString.length != EXPECTED_NR_OF_ARGS) {
 			return;
 		}
 		try {
-			TreeType type = TreeType.valueOf(sem[0].toUpperCase());
-			TreeSize size = TreeSize.valueOf(sem[1].toUpperCase());
-			double relX = Double.parseDouble(sem[2]);
-			double relY = Double.parseDouble(sem[3]);
-			if (relX < 0 || relX > 100 || relY < 50 || relY > 100) {
-				System.out.println("Coordinates out of bounds at line " + lineNr);
+			TreeType type = TreeType.valueOf(splitString[0].toUpperCase());
+			TreeSize size = TreeSize.valueOf(splitString[1].toUpperCase());
+			double relX = Double.parseDouble(splitString[2]);
+			double relY = Double.parseDouble(splitString[3]);
+			if (relX < LOWER_X_BOUND || relX > UPPER_X_BOUND || relY < LOWER_Y_BOUND || relY > UPPER_Y_BOUND) {
 				return;
 			}
 			trees.add(new Tree(type, size, relX, relY));
-		} catch (NumberFormatException nfe) {
-			System.out.println("Wrong number on line " + lineNr);
-		} catch (IllegalArgumentException iae) {
-			System.out.println("Wrong tree type or size on line " + lineNr);
+		} catch (Exception nfe) {
 		}
 	}
 
@@ -91,22 +87,20 @@ public class FileIO {
 			try {
 				selectedFile.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return;
 			}
 		}
 
 		StringBuilder builder = new StringBuilder();
 		for (MovableObject movObject : movObjects) {
 			if (movObject instanceof Tree) {
-				builder.append(movObject.toString() + "\n");
+				builder.append(movObject.toString() + LINEBREAK);
 			}
 		}
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(selectedFile))) {
 			bw.write(builder.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return;
 		}
 	}
 }

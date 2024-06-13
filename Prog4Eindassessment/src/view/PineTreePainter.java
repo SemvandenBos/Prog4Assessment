@@ -1,8 +1,8 @@
 package view;
 
 import controller.Controller;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
@@ -18,25 +18,25 @@ public class PineTreePainter extends TreePainter {
 	private static final double ARC_LENGTH = 70.0;
 	private static final double HEIGHT_FACTOR = -1.2;
 
+	public PineTreePainter(ReadOnlyDoubleProperty paintingXproperty, ReadOnlyDoubleProperty paintingYproperty,
+			Controller controller) {
+		super(paintingXproperty, paintingYproperty, controller);
+	}
+
 	@Override
-	public Pane paintMovableObject(MovableObject tree, ReadOnlyDoubleProperty paintingXproperty,
-			ReadOnlyDoubleProperty paintingYproperty, Controller controller) {
-		Pane p = makeDefaultTreeBase(tree, paintingXproperty, paintingYproperty, controller);
+	public Pane paintMovableObject(MovableObject tree) {
+		Pane p = makeDefaultTreeBase(tree);
+		double leavesHeight = realSize(tree, TRUNK_HEIGHT * HEIGHT_FACTOR);
+		double leavesSize = realSize(tree, PINELEAF_SIZE);
+		Arc leavesArc = new Arc(0, leavesHeight, leavesSize, leavesSize, ARC_START_ANGLE, ARC_LENGTH);
 
-		Arc arc = new Arc();
-		setBlackStroke(arc);
-		arc.setFill(adjustHSBcolor(BASE_COLOR, ((Tree) tree).getObjectSize()));
+//		setBlackStroke(leavesArc);
+		adjustHSBcolor(leavesArc, BASE_COLOR, ((Tree) tree).getObjectSize());
+		leavesArc.setType(ArcType.ROUND);
 
-		arc.setStartAngle(ARC_START_ANGLE);
-		arc.setLength(ARC_LENGTH);
-		arc.setType(ArcType.ROUND);
-
-		arc.layoutYProperty().bind(getSizeBindingForConstant(tree, TRUNK_HEIGHT).multiply(HEIGHT_FACTOR));
-		DoubleBinding s = getSizeBindingForConstant(tree, PINELEAF_SIZE);
-		arc.radiusXProperty().bind(s);
-		arc.radiusYProperty().bind(s);
-
-		p.getChildren().add(arc);
+		Group group = makeGroup(tree);
+		group.getChildren().add(leavesArc);
+		p.getChildren().add(group);
 		return p;
 	}
 }

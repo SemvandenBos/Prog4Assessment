@@ -14,4 +14,6 @@ public class SoundHandler {
 			mediaPlayer.play();
 		});
 	}
+
+	// TODO static access for the duckPane class? reduces useless instantiation;
 }

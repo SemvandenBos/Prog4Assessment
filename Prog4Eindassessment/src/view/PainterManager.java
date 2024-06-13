@@ -12,40 +12,44 @@ public class PainterManager {
 	private PineTreePainter pineTreePainter;
 	private WindmillPainter windmillPainter;
 	private HousePainter housePainter;
-	// TODO add all painters
-
-	private Controller controller;
-	private ReadOnlyDoubleProperty paintingXproperty;
-	private ReadOnlyDoubleProperty paintingYproperty;
+	private TumbleWeedPainter tumbleWeedPainter;
+	private WheatPatchPainter wheatPatchPainter;
+	private PackmanPainter packmanPainter;
 
 	public PainterManager(Controller controller, ReadOnlyDoubleProperty paintingXproperty,
 			ReadOnlyDoubleProperty paintingYproperty) {
-		this.controller = controller;
-		this.paintingXproperty = paintingXproperty;
-		this.paintingYproperty = paintingYproperty;
-
-		leafTreePainter = new LeafTreePainter();
-		pineTreePainter = new PineTreePainter();
-		windmillPainter = new WindmillPainter();
-		housePainter = new HousePainter();
+		leafTreePainter = new LeafTreePainter(paintingXproperty, paintingYproperty, controller);
+		pineTreePainter = new PineTreePainter(paintingXproperty, paintingYproperty, controller);
+		windmillPainter = new WindmillPainter(paintingXproperty, paintingYproperty, controller);
+		housePainter = new HousePainter(paintingXproperty, paintingYproperty, controller);
+		tumbleWeedPainter = new TumbleWeedPainter(paintingXproperty, paintingYproperty, controller);
+		wheatPatchPainter = new WheatPatchPainter(paintingXproperty, paintingYproperty, controller);
+		packmanPainter = new PackmanPainter(paintingXproperty, paintingYproperty, controller);
 	}
 
 	public Pane getPane(MovableObject tree) {
-		Pane p = null;
+		Pane p;
 		switch (tree.getMovableObjectType()) {
 		case TREE:
 			p = addSingleTree((Tree) tree);
 			break;
-		case BUSH:
-			p = pineTreePainter.paintMovableObject(tree, paintingXproperty, paintingYproperty, controller);
+		case WHEATPATCH:
+			p = wheatPatchPainter.paintMovableObject(tree);
 			break;
 		case HOUSE:
-			p = housePainter.paintMovableObject(tree, paintingXproperty, paintingYproperty, controller);
+			p = housePainter.paintMovableObject(tree);
 			break;
 		case WINDMILL:
-			p = windmillPainter.paintMovableObject(tree, paintingXproperty, paintingYproperty, controller);
+			p = windmillPainter.paintMovableObject(tree);
+			break;
+		case TUMBLEWEED:
+			p = tumbleWeedPainter.paintMovableObject(tree);
+			break;
+		case PACKMAN:
+			p = packmanPainter.paintMovableObject(tree);
 			break;
 		default:
+			p = null;
 			break;
 		}
 		return p;
@@ -55,10 +59,10 @@ public class PainterManager {
 		Pane p = null;
 		switch (tree.getTreeType()) {
 		case LEAF:
-			p = leafTreePainter.paintMovableObject(tree, paintingXproperty, paintingYproperty, controller);
+			p = leafTreePainter.paintMovableObject(tree);
 			break;
 		case PINE:
-			p = pineTreePainter.paintMovableObject(tree, paintingXproperty, paintingYproperty, controller);
+			p = pineTreePainter.paintMovableObject(tree);
 			break;
 		}
 		return p;

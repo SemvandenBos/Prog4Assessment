@@ -17,21 +17,25 @@ public class Tree extends MovableObject {
 		relYproperty.set(relY);
 	}
 
-	// Constructor for adding randomised tree
-	public Tree(TreeType type) {
+	// Constructor for adding randomised tree TODO
+	public Tree(TreeType type, boolean isRandom) {
 		super(MovableObjectType.TREE);
+		if (isRandom) {
+			relYproperty.set(random.nextDouble() * (100 - MIN_Y_VALUE) + MIN_Y_VALUE);
+			relXproperty.set(random.nextDouble() * 100);
+		}
 		this.treeType = type;
 		this.treeSize = TreeSize.randomSize();
 	}
 
-	public TreeSize getObjectSize() {
-		return treeSize;
-	}
-
-//	-----------SETTERS AND GETTERS-------------------
+//	-----------GETTERS-------------------
 
 	public TreeType getTreeType() {
 		return treeType;
+	}
+
+	public TreeSize getObjectSize() {
+		return treeSize;
 	}
 
 	@Override

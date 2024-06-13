@@ -12,22 +12,25 @@ import javafx.util.Duration;
 class AnimationDuck extends ImageView {
 	private static final int DUCK_FPS = 11;
 	private static final Duration FRAME_TIME = Duration.seconds(1.0 / DUCK_FPS);
-
-	private final IntegerProperty frameCounter = new SimpleIntegerProperty(0);
-	private Timeline flyTimeline;
+	private static final IntegerProperty frameCounter = new SimpleIntegerProperty(0);
 	private static final int[] FRAME_ORDER = new int[] { 3, 4, 5, 0, 1, 2, 2, 1, 0, 5, 4, 3 };
 
+	private static final int COLUMNS = 3;
+	private static final int ROWS = 2;
+	private static final String DUCK_IMG_PATH = "./pics/duckshapes.png";
 	private final Rectangle2D[] cellClips;
+	private Timeline flyTimeline;
 
-	public AnimationDuck(Image image, int numColumns, int numRows) {
-		double cellWidth = image.getWidth() / numColumns;
-		double cellHeight = image.getHeight() / numRows;
+	public AnimationDuck() {
+		Image image = new Image(DUCK_IMG_PATH);
+		double cellWidth = image.getWidth() / COLUMNS;
+		double cellHeight = image.getHeight() / ROWS;
 
 		// Create frames
-		cellClips = new Rectangle2D[numColumns * numRows];
+		cellClips = new Rectangle2D[COLUMNS * ROWS];
 		for (int i = 0; i < cellClips.length; i++) {
-			double startX = i % numColumns * cellWidth;
-			double startY = i / numColumns * cellHeight;
+			double startX = i % COLUMNS * cellWidth;
+			double startY = i / COLUMNS * cellHeight;
 			cellClips[i] = new Rectangle2D(startX, startY, cellWidth, cellHeight);
 		}
 
@@ -45,12 +48,10 @@ class AnimationDuck extends ImageView {
 
 	public void fly() {
 		flyTimeline.play();
-		setVisible(true);
 	}
 
 	public void stopFly() {
 		flyTimeline.stop();
-//		setVisible(false);
 	}
 
 }
