@@ -17,7 +17,6 @@ public class Tree extends MovableObject {
 		relYproperty.set(relY);
 	}
 
-	// Constructor for adding randomised tree TODO
 	public Tree(TreeType type, boolean isRandom) {
 		super(MovableObjectType.TREE);
 		if (isRandom) {

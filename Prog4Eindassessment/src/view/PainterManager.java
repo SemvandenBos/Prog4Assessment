@@ -15,6 +15,8 @@ public class PainterManager {
 	private TumbleWeedPainter tumbleWeedPainter;
 	private WheatPatchPainter wheatPatchPainter;
 	private PackmanPainter packmanPainter;
+	private MountainPainter mountainPainter;
+	private RockPainter rockPainter;
 
 	public PainterManager(Controller controller, ReadOnlyDoubleProperty paintingXproperty,
 			ReadOnlyDoubleProperty paintingYproperty) {
@@ -25,6 +27,8 @@ public class PainterManager {
 		tumbleWeedPainter = new TumbleWeedPainter(paintingXproperty, paintingYproperty, controller);
 		wheatPatchPainter = new WheatPatchPainter(paintingXproperty, paintingYproperty, controller);
 		packmanPainter = new PackmanPainter(paintingXproperty, paintingYproperty, controller);
+		mountainPainter = new MountainPainter(paintingXproperty, paintingYproperty, controller);
+		rockPainter = new RockPainter(paintingXproperty, paintingYproperty, controller);
 	}
 
 	public Pane getPane(MovableObject tree) {
@@ -47,6 +51,12 @@ public class PainterManager {
 			break;
 		case PACKMAN:
 			p = packmanPainter.paintMovableObject(tree);
+			break;
+		case MOUNTAIN:
+			p = mountainPainter.paintMovableObject(tree);
+			break;
+		case ROCK:
+			p = rockPainter.paintMovableObject(tree);
 			break;
 		default:
 			p = null;

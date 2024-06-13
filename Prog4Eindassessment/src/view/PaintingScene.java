@@ -10,17 +10,18 @@ import model.World;
 
 public class PaintingScene extends Scene {
 
-	private static final double PAINTING_WIDTH = 800;
-	private static final double PAINTING_HEIGHT = 600;
+	private static final int PAINTING_WIDTH = 800;
+	private static final int PAINTING_HEIGHT = 600;
+
 	private Controller mainController;
 	private PaintingMenuBar menuBar;
 	private Label autographLabel;
-
 	private Pane centerPane;
 
 	public PaintingScene(Controller controller, World world) {
 		super(new BorderPane());
 		this.mainController = controller;
+
 		createChildren(controller, world);
 		layoutRoot();
 		setOnKeyPressed(e -> mainController.keyPressed(e.getCode()));
@@ -36,7 +37,7 @@ public class PaintingScene extends Scene {
 		centerPane.getChildren().addAll(paintingPane, autographLabel, duckPane);
 	}
 
-	// create childrenPanes with right references
+	// create root with child panes
 	private void layoutRoot() {
 		BorderPane root = (BorderPane) getRoot();
 		root.setPrefSize(PAINTING_WIDTH, PAINTING_HEIGHT);

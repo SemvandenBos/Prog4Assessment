@@ -11,9 +11,7 @@ public class DuckPane extends StackPane {
 
 	public DuckPane(World world, Pane root) {
 		setBindings(world.getDuck(), root);
-
 		animationDuck = new AnimationDuck();
-
 		getChildren().add(animationDuck);
 
 		world.getDuck().isActiveProperty().addListener((ov, o, n) -> setActive(n));

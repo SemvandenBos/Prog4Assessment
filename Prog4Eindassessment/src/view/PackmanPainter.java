@@ -16,6 +16,7 @@ public class PackmanPainter extends MovableObjectPainter {
 	private static final double BITESIZE = 30.0;
 	private static final double FOOD_RADIUS = 15.0;
 	private static final double BITESPEED = 0.5;
+	private static final double FOOD_FREQUENCY = 3.0;
 
 	protected PackmanPainter(ReadOnlyDoubleProperty paintingXproperty, ReadOnlyDoubleProperty paintingYproperty,
 			Controller controller) {
@@ -35,6 +36,7 @@ public class PackmanPainter extends MovableObjectPainter {
 
 		movableObject.getRelXproperty().addListener((ov, o, n) -> {
 			setAngles(n.doubleValue(), packman);
+			food.setLayoutY(Math.sin(n.doubleValue()) * FOOD_FREQUENCY);
 		});
 
 		Group group = makeGroup(movableObject);
@@ -43,8 +45,8 @@ public class PackmanPainter extends MovableObjectPainter {
 		return p;
 	}
 
-	private void setAngles(double n, Arc packman) {
-		double newAngle = (Math.sin(n * BITESPEED) + 1) * BITESIZE;
+	private void setAngles(double newDouble, Arc packman) {
+		double newAngle = (Math.sin(newDouble * BITESPEED) + 1) * BITESIZE;
 		packman.setStartAngle(newAngle);
 		packman.setLength(360 - newAngle * 2);
 	}

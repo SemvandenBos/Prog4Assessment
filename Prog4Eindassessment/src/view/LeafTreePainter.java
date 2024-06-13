@@ -14,19 +14,19 @@ public class LeafTreePainter extends TreePainter {
 	private static final double LEAF_RADIUS = 30;
 	private static final Color BASE_COLOR = Color.hsb(113, 0.7, 0.7);
 
-	public LeafTreePainter(ReadOnlyDoubleProperty paintingXproperty, ReadOnlyDoubleProperty paintingYproperty, Controller controller) {
+	public LeafTreePainter(ReadOnlyDoubleProperty paintingXproperty, ReadOnlyDoubleProperty paintingYproperty,
+			Controller controller) {
 		super(paintingXproperty, paintingYproperty, controller);
 	}
 
 	@Override
 	public Pane paintMovableObject(MovableObject tree) {
-		Pane p = makeDefaultTreeBase(tree);
-		double leafHeight = realSize(tree, -TRUNK_HEIGHT);
-		double leafRadius = realSize(tree, LEAF_RADIUS);
+		Pane p = makeDefaultMovablePane(tree);
+		double leafHeight = getRealTreeSize(tree, -TRUNK_HEIGHT);
+		double leafRadius = getRealTreeSize(tree, LEAF_RADIUS);
 		Circle leaves = new Circle(0, leafHeight, leafRadius);
 
 		// Styling
-//		setBlackStroke(leaves);
 		adjustHSBcolor(leaves, BASE_COLOR, ((Tree) tree).getObjectSize());
 
 		Group group = makeGroup(tree);

@@ -46,6 +46,7 @@ public abstract class MovableObjectPainter {
 		pane.setOnMouseReleased(e -> controller.adjustDepth(movableObject));
 	}
 
+	// Makes group with scaling bound to model so shapes dont have to be bound
 	protected Group makeGroup(MovableObject movableObject) {
 		Group group = new Group();
 		Scale scale = new Scale();

@@ -25,14 +25,13 @@ public class PineTreePainter extends TreePainter {
 
 	@Override
 	public Pane paintMovableObject(MovableObject tree) {
-		Pane p = makeDefaultTreeBase(tree);
-		double leavesHeight = realSize(tree, TRUNK_HEIGHT * HEIGHT_FACTOR);
-		double leavesSize = realSize(tree, PINELEAF_SIZE);
-		Arc leavesArc = new Arc(0, leavesHeight, leavesSize, leavesSize, ARC_START_ANGLE, ARC_LENGTH);
+		Pane p = makeDefaultMovablePane(tree);
+		double leavesHeight = getRealTreeSize(tree, TRUNK_HEIGHT * HEIGHT_FACTOR);
+		double leavesSize = getRealTreeSize(tree, PINELEAF_SIZE);
 
-//		setBlackStroke(leavesArc);
-		adjustHSBcolor(leavesArc, BASE_COLOR, ((Tree) tree).getObjectSize());
+		Arc leavesArc = new Arc(0, leavesHeight, leavesSize, leavesSize, ARC_START_ANGLE, ARC_LENGTH);
 		leavesArc.setType(ArcType.ROUND);
+		adjustHSBcolor(leavesArc, BASE_COLOR, ((Tree) tree).getObjectSize());
 
 		Group group = makeGroup(tree);
 		group.getChildren().add(leavesArc);

@@ -17,7 +17,6 @@ public class PaintingPane extends Pane {
 	public PaintingPane(World world, Controller controller, Pane wrapper) {
 		skyPane = new Pane();
 		painterManager = new PainterManager(controller, widthProperty(), heightProperty());
-
 		getChildren().add(skyPane);
 
 		setBiomeLayout(world.getCurrentBiome());
@@ -39,6 +38,7 @@ public class PaintingPane extends Pane {
 				getChildren().add(skyPane);
 			}
 		});
+
 		world.treesProperty().addListener((ListChangeListener<MovableObject>) change -> {
 			while (change.next()) {
 				int index = change.getFrom();

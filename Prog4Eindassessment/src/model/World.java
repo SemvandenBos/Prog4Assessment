@@ -22,8 +22,8 @@ import javafx.scene.input.KeyCode;
 
 public class World {
 	private static final int FRAMERATE = 24;
-	private static final double TREESPAWNCHANCE = 0.3;
-	private static final Biome[] BIOMES_LIST = { Biome.FOREST, Biome.WESTERN_FIELDS, Biome.TOWN };
+	private static final double TREESPAWNCHANCE = 0.35;
+	private static final Biome[] BIOMES_LIST = { Biome.FOREST, Biome.WESTERN_FIELDS, Biome.TOWN, Biome.MOUNTAINS };
 	private IntegerProperty selectedBiome;
 
 	private int videoProgression;
@@ -90,11 +90,7 @@ public class World {
 			double randDouble = random.nextDouble();
 			switch (BIOMES_LIST[selectedBiome.get()]) {
 			case FOREST:
-				if (randDouble < TREESPAWNCHANCE) {
-					Tree t = new Tree(TreeType.randomType(), false);
-					t.placeLeft();
-					addObjectAtIndex(t);
-				}
+				spawnTrees(randDouble);
 				break;
 			case WESTERN_FIELDS:
 				if (videoProgression % SPECIAL_OBJECT_FREQUENCY == 0) {
@@ -103,18 +99,29 @@ public class World {
 				}
 				break;
 			case TOWN:
-				if (randDouble < TREESPAWNCHANCE / 3f) {
-					Tree t = new Tree(TreeType.randomType(), false);
-					t.placeLeft();
-					addObjectAtIndex(t);
-				}
+				spawnTrees(randDouble * 3f);
 				if (videoProgression % SPECIAL_OBJECT_FREQUENCY == 0) {
 					addMovableObject(MovableObjectType.HOUSE);
 					addMovableObject(MovableObjectType.WHEATPATCH);
 				}
 				break;
+			case MOUNTAINS:
+				spawnTrees(randDouble * 4f);
+				if (videoProgression % SPECIAL_OBJECT_FREQUENCY == 0) {
+					addMovableObject(MovableObjectType.ROCK);
+					addMovableObject(MovableObjectType.MOUNTAIN);
+				}
+				break;
 			default:
 				break;
+			}
+		}
+
+		private void spawnTrees(double treespawnchance) {
+			if (treespawnchance < TREESPAWNCHANCE) {
+				Tree t = new Tree(TreeType.randomType(), false);
+				t.placeLeft();
+				addObjectAtIndex(t);
 			}
 		}
 	}

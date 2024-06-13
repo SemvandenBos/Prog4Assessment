@@ -9,9 +9,9 @@ import javafx.scene.shape.Circle;
 import model.MovableObject;
 
 public class TumbleWeedPainter extends MovableObjectPainter {
-	private static final double TUMBLE_RADIUS = 30d;
-	private static final double BOUNCE_HEIGHT = 20d;
-	private static final double BOUNCE_FREQUENCY = 0.2d;
+	private static final double TUMBLE_RADIUS = 30.0;
+	private static final double BOUNCE_HEIGHT = 20.0;
+	private static final double BOUNCE_FREQUENCY = 0.2;
 
 	protected TumbleWeedPainter(ReadOnlyDoubleProperty paintingXproperty, ReadOnlyDoubleProperty paintingYproperty,
 			Controller controller) {

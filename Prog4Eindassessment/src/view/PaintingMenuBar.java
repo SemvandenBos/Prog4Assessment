@@ -15,6 +15,10 @@ import javafx.scene.text.Font;
 public class PaintingMenuBar extends MenuBar {
 	private static final double FONT_SIZE = 24.0;
 
+	private static final int SMALL_TREEBATCH = 100;
+	private static final int MEDIUM_TREEBATCH = 1337;
+	private static final int LARGE_TREEBATCH = 9001;
+
 	private Controller controller;
 	private PaintingScene paintingScene;
 
@@ -57,13 +61,13 @@ public class PaintingMenuBar extends MenuBar {
 		addPineItem.setOnAction(e -> controller.addTree(TreeType.PINE));
 
 		MenuItem addBatchItem = new MenuItem("add 100 Trees");
-		addBatchItem.setOnAction(e -> controller.addTreeBatch(100));
+		addBatchItem.setOnAction(e -> controller.addTreeBatch(SMALL_TREEBATCH));
 
 		MenuItem addLeet = new MenuItem("add 1337 Trees");
-		addLeet.setOnAction(e -> controller.addTreeBatch(1337));
+		addLeet.setOnAction(e -> controller.addTreeBatch(MEDIUM_TREEBATCH));
 
 		MenuItem addThousands = new MenuItem("add 9001 Trees!");
-		addThousands.setOnAction(e -> controller.addTreeBatch(9001));
+		addThousands.setOnAction(e -> controller.addTreeBatch(LARGE_TREEBATCH));
 
 		MenuItem clearItem = new MenuItem("clear all Trees");
 		clearItem.setOnAction(e -> controller.clearAllTrees());
@@ -117,7 +121,7 @@ public class PaintingMenuBar extends MenuBar {
 	}
 
 	private void handleFontChange(String fontName) {
-		Font f2 = Font.loadFont(getClass().getResourceAsStream("/fonts/" + fontName + ".ttf"), FONT_SIZE);
-		paintingScene.handleFontChange(f2);
+		Font font = Font.loadFont(getClass().getResourceAsStream("/fonts/" + fontName + ".ttf"), FONT_SIZE);
+		paintingScene.handleFontChange(font);
 	}
 }

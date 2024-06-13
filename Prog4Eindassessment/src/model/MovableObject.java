@@ -16,7 +16,6 @@ public class MovableObject {
 	protected MovableObjectType movableObjectType;
 	protected Random random;
 
-	// TODO this and child classes constructors
 	protected MovableObject(MovableObjectType type) {
 		relXproperty = new SimpleDoubleProperty();
 		relYproperty = new SimpleDoubleProperty();

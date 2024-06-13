@@ -14,7 +14,8 @@ public class WindmillPainter extends MovableObjectPainter {
 	private static final double WINDMILL_WIDTH = 20.0;
 	private static final double SPINSPEED = 6.0;
 
-	public WindmillPainter(ReadOnlyDoubleProperty paintingXproperty, ReadOnlyDoubleProperty paintingYproperty, Controller controller) {
+	public WindmillPainter(ReadOnlyDoubleProperty paintingXproperty, ReadOnlyDoubleProperty paintingYproperty,
+			Controller controller) {
 		super(paintingXproperty, paintingYproperty, controller);
 	}
 

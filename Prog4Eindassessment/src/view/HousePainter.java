@@ -14,6 +14,7 @@ import model.MovableObject;
 public class HousePainter extends MovableObjectPainter {
 	private static final double HOUSESIZE = 100d;
 	private static final Color[] POSSIBLE_BASE_COLORS = { Color.ORANGE, Color.ORCHID, Color.POWDERBLUE };
+	private static final Double[] ROOF_POINTS = { 0.5 * HOUSESIZE, -HOUSESIZE, 0.0, 0.0, HOUSESIZE, 0.0 };
 
 	public HousePainter(ReadOnlyDoubleProperty paintingXproperty, ReadOnlyDoubleProperty paintingYproperty,
 			Controller controller) {
@@ -30,7 +31,7 @@ public class HousePainter extends MovableObjectPainter {
 		houseBase.setFill(randColor);
 
 		Polygon houseRoof = new Polygon();
-		houseRoof.getPoints().addAll(new Double[] { 0.5 * HOUSESIZE, -HOUSESIZE, 0.0, 0.0, HOUSESIZE, 0.0 });
+		houseRoof.getPoints().addAll(ROOF_POINTS);
 		houseRoof.setLayoutY(-HOUSESIZE);
 		houseRoof.setFill(Color.RED);
 

@@ -4,7 +4,6 @@ import controller.Controller;
 import enums.TreeSize;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.Group;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -20,15 +19,9 @@ public abstract class TreePainter extends MovableObjectPainter {
 		super(paintingXproperty, paintingYproperty, controller);
 	}
 
-	protected Pane makeDefaultTreeBase(MovableObject tree) {
-		Pane treePane = makeDefaultMovablePane(tree);
-//		treePane.getChildren().add(makeTrunk(tree));
-		return treePane;
-	}
-
 	private Rectangle makeTrunk(MovableObject tree) {
-		double trunkWidth = realSize(tree, TRUNK_WIDTH);
-		double trunkHeight = realSize(tree, TRUNK_HEIGHT);
+		double trunkWidth = getRealTreeSize(tree, TRUNK_WIDTH);
+		double trunkHeight = getRealTreeSize(tree, TRUNK_HEIGHT);
 		Rectangle trunk = new Rectangle(-0.5 * trunkWidth, -trunkHeight, trunkWidth, trunkHeight);
 		trunk.setFill(Color.BROWN);
 		setBlackStroke(trunk);
@@ -42,10 +35,12 @@ public abstract class TreePainter extends MovableObjectPainter {
 		return group;
 	}
 
-	protected double realSize(MovableObject tree, double constant) {
+	// Returns the proper scaling for constant based on TreeSize
+	protected double getRealTreeSize(MovableObject tree, double constant) {
 		return constant * ((Tree) tree).getObjectSize().getSizeScaleValue();
 	}
 
+	// Shifts the tree's base color and styles shape
 	protected void adjustHSBcolor(Shape shape, Color c, TreeSize size) {
 		setBlackStroke(shape);
 		double newSaturation = c.getSaturation() + size.getColorSaturation();
